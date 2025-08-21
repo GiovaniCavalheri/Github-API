@@ -38,3 +38,18 @@ async function getUsersFromGithub(username: string): Promise<User> {
     throw new Error(error.message);
   }
 }
+
+// ==> Recebendo a requisição do usuário
+app.get('users/:username', async (request, response) => {
+  // Extrai o parâmetro 'username' da URL (ex: 'giovaniccavalheri' de /user/giovaniccavalheri)
+  const { username } = request.params;
+
+  try {
+    const user = await getUsersFromGithub(username);
+    response.status(200).json(user);
+
+  } catch (error: any) {
+    response.status(404).json({ message: error.message });
+  }
+});
+
