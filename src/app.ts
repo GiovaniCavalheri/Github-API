@@ -1,5 +1,8 @@
 import Express = require("express");
 import Cors = require("cors");
+import http = require("http");
+import request = require("http");
+import response = require("express");
 
 const app = Express();
 app.use(Cors());
@@ -53,3 +56,19 @@ app.get('users/:username', async (request, response) => {
   }
 });
 
+app.get('users/:username/repos', async(request, response) => {
+  const { username } = request.params
+  const userRepos = await getUsersFromGithub(username)
+  const urlRepositorio = userRepos.repos_url;
+
+  const responseUrlRepos = await fetch(urlRepositorio)
+  if (!responseUrlRepos.ok) {
+    throw new Error("Response is not found, bad request.");
+  }
+
+  const data = await response.json();
+  const userUrl: User = {
+    name: string
+  }
+
+})
