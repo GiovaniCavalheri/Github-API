@@ -56,19 +56,23 @@ app.get('users/:username', async (request, response) => {
   }
 });
 
-app.get('users/:username/repos', async(request, response) => {
-  const { username } = request.params
-  const userRepos = await getUsersFromGithub(username)
+app.get("/users/:username/repos", async (request, response) => {
+  const { username } = request.params;
+  const userRepos = await getUsersFromGithub(username);
   const urlRepositorio = userRepos.repos_url;
 
-  const responseUrlRepos = await fetch(urlRepositorio)
+  const responseUrlRepos = await fetch(urlRepositorio);
   if (!responseUrlRepos.ok) {
     throw new Error("Response is not found, bad request.");
   }
 
-  const data = await response.json();
-  const userUrl: User = {
-    name: string
-  }
-
-})
+  const data = await responseUrlRepos.json();
+  const repos = data.map((repo: any) => {
+    return {
+      name: repo.name,
+      description: repo.description,
+      fork: repo.fork,
+    };
+  });
+  return response.json(repos); 
+});
